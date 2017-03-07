@@ -1,6 +1,6 @@
 //1. state. needs A. questions themselves (store as objects in an array). B. the choices and the correct answer C. what question they're on -->array.length
 //D. what questions they have gotten correct ex. [true, false, true, true, true]
-//questions [0, 1, 2, 3, 4] page [titlepage, 0, 1, 2, 3, 4, finalpage]
+//questions [0, 1, 2, 3, 4] page [titlepage, 0, 1, 2, 3, 4, finalpage]a
 var state = {
 	questions: [
 		{
