@@ -19,7 +19,7 @@ var state = {
 			correctAnswer: 0
 		},
 		{
-			title: 'A local throws tea at you and screams, "Mahcus Smaht pahked his cah on Hahvahd Yahd!" Who is "Mahcus"?',
+			title: '"Mahcus Smaht pahked his cah on Hahvahd Yahd!" Who is "Mahcus"?',
 			choices: ["A Patriots offensive weapon", "A Celtics guard", "A Red Sox infielder", "Say again, but in English this time"],
 			correctAnswer: 1
 		},
@@ -65,9 +65,11 @@ var state = {
 function evaluateUserAnswer(state, answerReal, answerUser) {
 	if (answerReal === answerUser) {
 		state.qCorrect.push(true);
+		return true;
 	}
 	else {
 		state.qCorrect.push(false);
+		return false;
 	}
 }
 
@@ -224,10 +226,14 @@ function handleUserAnswer(state, $choices, $numCorrect, $selector) {
 		let userId = $(e.currentTarget).attr("id");
 		let correctAnswer = currentQ['choices'][answerIndex];
 		let userChoice = currentQ['choices'][userId];
-		evaluateUserAnswer(state, correctAnswer, userChoice);
+		let isCorrect = evaluateUserAnswer(state, correctAnswer, userChoice);
 		correctQuestions(state, $numCorrect);
 		msgToUser(state, $selector);
 		$choices.addClass('no-click');
+		if (!isCorrect) {
+			$(e.currentTarget).addClass("red");
+		}
+		$("#"+answerIndex).addClass("green");
 	});
 }
 // C. handleReset function
