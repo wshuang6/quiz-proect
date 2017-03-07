@@ -54,7 +54,8 @@ var state = {
 			correctAnswer: 2
 		}
 	],
-	qCorrect: []
+	qCorrect: [],
+	questionsRandom: []
 };
 
 //2. functions that modify the state or rely on information from state
@@ -123,14 +124,27 @@ function makeChoiceHtml (qObj) {
 	});
 }
 
+
 function renderQ (state, $btnDiv, $titleDiv, $choices) {
 	var num = getQNum(state);
 	var currentQObj = state.questions[num];
-	var choiceArrayHtml = makeChoiceHtml(currentQObj);
+	var choiceArrayHtml = shuffle(makeChoiceHtml(currentQObj));
 	$btnDiv.show();
 	$titleDiv.html("<h1 class='question'>"+currentQObj.title+"</h1>");
 	$choices.html(choiceArrayHtml);
 }
+
+function shuffle (array) {
+	let choiceArrayInProgress = [];
+	for (var i = 0; i < 4; i++) {
+		var spliceIndex = Math.floor(Math.random()*array.length);
+		choiceArrayInProgress.push(array.splice(spliceIndex, 1));
+	}
+	return choiceArrayInProgress.reduce(function(a, b){
+	  return a.concat(b);
+	});
+}
+
 
 //C. render numQuestions (render into top left div)
 	// invoke getQNum function, save return value
@@ -249,12 +263,24 @@ function clearTop($numCount, $numCorrect, $rightWrong) {
 function handleReset(state, $btnReset, $btnDiv, $titleDiv, $choices, $numCount, $numCorrect, $rightWrong) {
 	$btnReset.on("click", function(e) {
 		state.qCorrect = [];
+		state.questions = shuffle2(state.questions);
 		renderLanding($btnDiv, $titleDiv, $choices);
 		handleStartQuiz(
 		state, $('.btn-start'), $(".btn-container"), $(".js-question-title"), $(".js-choices"),
 		$(".js-q-num-count"), $(".js-score-count"));
 		clearTop($numCount, $numCorrect, $rightWrong);
 		$choices.removeClass('no-click');
+	});
+}
+
+function shuffle2 (array) { //on reset, randomizes question order
+	let choiceArrayInProgress = [];
+	for (var i = 0; i < 10; i++) {
+		var spliceIndex = Math.floor(Math.random()*array.length);
+		choiceArrayInProgress.push(array.splice(spliceIndex, 1));
+	}
+	return choiceArrayInProgress.reduce(function(a, b){
+	  return a.concat(b);
 	});
 }
 // D. handleStartQuiz
