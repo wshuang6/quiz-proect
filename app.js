@@ -98,7 +98,7 @@ function getQNum(state) {
 	// Use jQuery method html()
 function renderLanding ($btnDiv, $titleDiv, $choices) {
 	$btnDiv.hide();
-	var quizTitleHtml = "<h1>How big of a Masshole are you (at least when it comes to sports)?</h1>";
+	var quizTitleHtml = "<h1 class='quiz-title'>How big of a Masshole are you<br/> (at least when it comes to sports)?</h1>";
 	$titleDiv.html(quizTitleHtml);
 	var buttonHtml = "<button class='btn-start'>Start!</button>";
 	$choices.html(buttonHtml);
