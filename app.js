@@ -27,6 +27,31 @@ var state = {
 			title: "Tom Brady is...",
 			choices: ["better than Peyton Manning", "the Greatest football player Of All Time", "always comfortable in his Uggs", "all of the above"],
 			correctAnswer: 3
+		},
+		{
+			title: "What is the name of the Red Sox home field?",
+			choices: ["Fenway Park", "Wrigley Field", "Camden Yards", "Yankee Stadium"],
+			correctAnswer: 0
+		},
+		{
+			title: "Who did the Patriots defeat in the 2017 Superbowl?",
+			choices: ["The Bears", "The Giants", "The Falcons", "The Bucs"],
+			correctAnswer: 2
+		},
+		{
+			title: "In which year did the Red Sox break 'the curse of Bambino'?",
+			choices: ["2001", "2007", "1990", "2004"],
+			correctAnswer: 3
+		},
+		{
+			title: "Which former Red Sox player is the only pitcher in history to win 500 games?",
+			choices: ["Babe Ruth", "Joe Wood", "Cy Young", "'Shoeless' Joe Jackson"],
+			correctAnswer: 2
+		},
+		{
+			title: "What is the name of the Pat's home stadium?",
+			choices: ["Patriots Field", "Civic Center", "Gillette Stadium", "Fenway"],
+			correctAnswer: 2
 		}
 	],
 	qCorrect: []
@@ -37,7 +62,6 @@ var state = {
 	// it should receive a number that corresponds to the id of user's choice
 	// it compares that id to the number in correctAnswer
 	// if equal push true, if not equal push false to qCorrect
-
 function evaluateUserAnswer(state, answerReal, answerUser) {
 	if (answerReal === answerUser) {
 		state.qCorrect.push(true);
@@ -63,15 +87,15 @@ function getNumCorrect(state) {
 //C. getQNum = arraylength.
 	// We use qCorrect for determining what question they're on
 
-function getQNum (state) {
+function getQNum(state) {
 	return state.qCorrect.length;
 }
+
 //3. functions that render based on the state
 //A. Render landing page function
 	// use jQ hide method to hide buttons
 	// Title div: Render html string with title of quiz and our 'start quiz' button
 	// Use jQuery method html()
-
 function renderLanding ($btnDiv, $titleDiv, $choices) {
 	$btnDiv.hide();
 	var quizTitleHtml = "<h1>How big of a Masshole are you (at least when it comes to sports)?</h1>";
@@ -79,10 +103,6 @@ function renderLanding ($btnDiv, $titleDiv, $choices) {
 	var buttonHtml = "<button class='btn-start'>Start!</button>";
 	$choices.html(buttonHtml);
 }
-
-renderLanding($(".btn-container"), $(".js-question-title"), $(".js-choices"));
-
-
 
 //B. Render questions and choices
   // Title div: The question and choices
@@ -92,10 +112,9 @@ renderLanding($(".btn-container"), $(".js-question-title"), $(".js-choices"));
 	// We could use array method map to iterate through the choices array for that question and pass 	each choice its ID
 	// use jQuery html method and render the 'title' in the title div
 	// use jQuery html method and render the choices in the choices div
-
 function makeChoiceHtml (qObj) {
 	return qObj["choices"].map(function(str, index){
-		return `<div id='${index}'>${str}</div>`
+		return `<div class="choice" id='${index}'>${str}</div>`
 	});
 }
 
@@ -104,53 +123,48 @@ function renderQ (state, $btnDiv, $titleDiv, $choices) {
 	var currentQObj = state.questions[num];
 	var choiceArrayHtml = makeChoiceHtml(currentQObj);
 	$btnDiv.show();
-	$titleDiv.html(currentQObj.title);
+	$titleDiv.html("<h1 class='question'>"+currentQObj.title+"</h1>");
 	$choices.html(choiceArrayHtml);
 }
 
-renderQ(state, $(".btn-container"), $(".js-question-title"), $(".js-choices"));
 //C. render numQuestions (render into top left div)
 	// invoke getQNum function, save return value
 	// input that value in the DOM (top left div) using jQuery html method
-function numQuestions (state, $numCount) {
+function numQuestions(state, $numCount) {
 	var num = getQNum(state) + 1;
 	var total = state.questions.length;
-	$numCount.html(`You are on question ${num} out of ${total}.`)
+	$numCount.html(`<p>You are on question ${num} out of ${total}.</p>`)
 }
-numQuestions(state, $(".js-q-num-count"));
 
 
 //D. render number correct (only render into the top middle div)
 	// invoke getNumCorrect, save the return value
 	// input that value into the DOM using jQuery html method
-
-function correctQuestions (state, $numCorrect) {
+function correctQuestions(state, $numCorrect) {
 	var num = getNumCorrect(state);
-	$numCorrect.html(`You have gotten ${num} question(s) correct.`)
+	$numCorrect.html(`<p>You have gotten ${num} question(s) correct.</p>`)
 }
-correctQuestions(state, $(".js-score-count"));
+
 //E. render msgToUser function
 	// Look at the last value in the qCorrect array.
 	// If false, html string says "sorry you got it wrong"
 	// If true, html string says "hurray you got it right"
 	// use JQ html method to input into the DOM
-function msgToUser (state, $selector) {
+function msgToUser(state, $selector) {
 	var num = getQNum(state) - 1;
 	var lastQ = state.qCorrect[num];
 	if (lastQ === true) {
-		$selector.html("You got it right!")
+		$selector.html("<p>You got it right!</p>")
 	}
 	else {
-		$selector.html("You disappoint me.")
+		$selector.html("<p>You disappoint me.</p>")
 	}
 }
 
-msgToUser(state, $(".js-right-wrong"));
 //F. render final page function
 	// Title div: Render html string with final score and our 'reset quiz' button
 	// Use jQuery method html() to input this
-
-function renderFinal ($btnDiv, $titleDiv) {
+function renderFinal(state, $btnDiv, $titleDiv) {
 	$btnDiv.hide();
 	var MH;
 	var correct = getNumCorrect(state);
@@ -166,14 +180,22 @@ function renderFinal ($btnDiv, $titleDiv) {
 	var quizTitleHtml = `<p>You got ${correct} question(s) right. ${MH}</p>`;
 	$titleDiv.html(quizTitleHtml);
 }
-renderFinal($(".btn-next"), $(".js-question-title"));
 
 //1. user clicks on button. 2. state is changed to reflect correct answer 3. re render page partially to convey whether they got question right or wrong 4. User clicks on next question button 5. we re-render whole page
 
-//4. event listeners
+//4. Event listeners
 //A. handleNextQuestion $btn
 	// When user clicks on next question button
 	// in our callback function we are going to invoke B, C and D functions
+	function handleNextQuestion(
+		state, $btnNext, $btnDiv, $titleDiv, $choices, $numCount, $numCorrect) {
+		$btnNext.on("click", function(e) {
+			renderQ(state, $btnDiv, $titleDiv, $choices);
+			numQuestions(state, $numCount);
+			correctQuestions(state, $numCorrect);
+			e.preventDefault();
+		});
+	}
 //B. handleUserAnswer
 	// get the id of the element user clicks on using jQ traversal methods
 	// Attach the event listener to the div in which choices are rendered.
@@ -181,19 +203,43 @@ renderFinal($(".btn-next"), $(".js-question-title"));
 	// Use jQuery method attr('id') to get user's choice
 	// invoke evaluateUserAnswer with user's choice
 	// invoke render functions D and E
+function handleUserAnswer(state, $choices, $numCorrect, $selector) {
+	$choices.on("click", ".choice", function(e) {
+		let indexQ = getQNum(state);
+		let currentQ = state.questions[indexQ];
+		let answerIndex = currentQ['correctAnswer'];
+		let userId = $(e.currentTarget).attr("id");
+		let correctAnswer = currentQ['choices'][answerIndex];
+		let userChoice = currentQ['choices'][userId];
+		//console.log(userChoice);
+		evaluateUserAnswer(state, correctAnswer, userChoice);
+		correctQuestions(state, $numCorrect);
+		msgToUser(state, $selector);
+	});
+}
 // C. handleReset function
 	// wipe clear qCorrect
 	// invoke render function A (landing page)
+function handleReset(state, $btnReset, $btnDiv, $titleDiv, $choices) {
+	$btnReset.on("click", function(e) {
+		state.qCorrect = [];
+		renderLanding($btnDiv, $titleDiv, $choices);
+	});
+}
 // D. handleStartQuiz
 	// invoke the handleNextQuestion BUT instead of passing in the 'next question' button as the
-
+function handleStartQuiz(state, $btnStart, $btnDiv, $titleDiv, $choices, $numCount, $numCorrect) {
+	handleNextQuestion(state, $btnStart, $btnDiv, $titleDiv, $choices, $numCount, $numCorrect);
+}
 // Document Ready...
-
-
-
-
-/*
-$("parentDiv").on("click", "childDiv", function(event) {
-	let userChoice = $(event.currentTarget).attr("id");
+$(function() {
+	renderLanding($(".btn-container"), $(".js-question-title"), $(".js-choices"));
+	handleStartQuiz(
+		state, $('.btn-start'), $(".btn-container"), $(".js-question-title"), $(".js-choices"),
+		$(".js-q-num-count"), $(".js-score-count"));
+	handleUserAnswer(state, $(".js-choices"), $(".js-score-count"), $(".js-right-wrong"));
+	handleNextQuestion(
+		state, $("#btn-next"), $(".btn-container"), $(".js-question-title"), $(".js-choices"), $(".js-q-num-count"), $(".js-score-count"));
+	handleReset(
+		state, $("#btn-reset"), $(".btn-container"), $(".js-question-title"), $(".js-choices"));
 });
-*/
