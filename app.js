@@ -168,10 +168,10 @@ function renderFinal(state, $btnDiv, $titleDiv) {
 	$btnDiv.hide();
 	var MH;
 	var correct = getNumCorrect(state);
-	if (correct < 2) {
+	if (correct < 3) {
 		MH = "Move to New York already."
 	}
-	else if (correct < 5) {
+	else if (correct < 9) {
 		MH = "Keep drinking Dunkin' and sacrificing puppies to Coach Belichick and one day you'll get there."
 	}
 	else {
@@ -211,6 +211,7 @@ function handleUserAnswer(state, $choices, $numCorrect, $selector) {
 		let userId = $(e.currentTarget).attr("id");
 		let correctAnswer = currentQ['choices'][answerIndex];
 		let userChoice = currentQ['choices'][userId];
+		//SOMETHING THAT PREVENTS BROWSER FROM LISTENING TO CHOICE
 		//console.log(userChoice);
 		evaluateUserAnswer(state, correctAnswer, userChoice);
 		correctQuestions(state, $numCorrect);
